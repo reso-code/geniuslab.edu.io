@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>العلوم التفاعلي - للصف الثالث الابتدائي (المنهج العراقي)</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <!-- خطوط Tajawal و Cairo (محلية) -->
+  <link rel="stylesheet" href="css/fonts.css" />
+  <!-- Tailwind CSS (مبني محلياً) -->
+  <link rel="stylesheet" href="css/tailwind.css" />
+  <!-- الأنماط المخصصة للمنصة -->
+  <link rel="stylesheet" href="css/style.css" />
+  <!-- PDF.js (محلية) لعرض الكتاب الأصلي -->
+  <script src="js/lib/pdf.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-emerald-200 selection:text-emerald-900">
+
+  <!-- ==================== TOP NAVIGATION BAR ==================== -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b-2 border-emerald-100 shadow-sm no-print">
+    <div class="max-w-7xl mx-auto px-3 sm:px-6 py-2.5">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <!-- Logo & Title -->
+        <button onclick="navigateTo('home')" class="flex items-center gap-3 text-right focus:outline-none group">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-gradient-to-br from-emerald-500 to-sky-600 flex items-center justify-center text-white text-2xl shadow-md group-hover:scale-105 transition">
+            🔬
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-display font-extrabold text-lg sm:text-xl text-emerald-800 leading-tight">العلوم التفاعلي</span>
+              <span class="hidden sm:inline-block text-xs font-bold bg-sky-100 text-sky-800 px-2.5 py-0.5 rounded-full">الصف الثالث الابتدائي</span>
+            </div>
+            <p class="text-xs text-slate-500 font-medium">جمهورية العراق • وزارة التربية (١٩٦ صفحة)</p>
+          </div>
+        </button>
+
+        <!-- Quick Status Pills (Auto-Save Badge, Stars & Sound) -->
+        <div class="flex items-center gap-2">
+          <span id="saveStatusBadge" class="hidden md:inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 px-3 py-1.5 rounded-2xl text-xs font-bold" title="يتم حفظ تقدمك وملاحظاتك تلقائياً في المتصفح">
+            <span>💾</span>
+            <span>التقدّم محفوظ</span>
+          </span>
+          <button onclick="navigateTo('progress')" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-800 px-3 py-2 rounded-2xl font-bold text-sm transition" title="نجومي وتقدمي">
+            <span class="text-lg">⭐</span>
+            <span id="headerStarsCount">0</span>
+            <span class="hidden sm:inline">نجمة</span>
+          </button>
+          <button id="soundToggleBtn" onclick="toggleSound()" class="flex items-center justify-center gap-1 px-3 h-10 rounded-2xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 text-sm font-bold transition" title="تشغيل/إيقاف المؤثرات الصوتية">
+            <span id="soundIconSpan" class="text-lg">🔊</span>
+            <span id="soundLabelSpan" class="hidden sm:inline text-xs">الصوت مفعّل</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Navigation Tabs -->
+      <nav aria-label="الأقسام الرئيسية" class="mt-2.5 flex items-center gap-1.5 overflow-x-auto pb-1">
+        <button data-nav="home" onclick="navigateTo('home')" class="nav-tab nav-btn-active flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <button data-nav="reader" onclick="navigateTo('reader')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>📖</span>
+          <span>الكتاب الأصلي</span>
+        </button>
+        <button data-nav="activities" onclick="navigateTo('activities')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🧩</span>
+          <span>الأنشطة التفاعلية</span>
+        </button>
+        <button data-nav="games" onclick="navigateTo('games')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🎮</span>
+          <span>الألعاب التعليمية</span>
+        </button>
+        <button data-nav="questions" onclick="navigateTo('questions')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>❓</span>
+          <span>أسئلة الدروس</span>
+        </button>
+        <button data-nav="exams" onclick="navigateTo('exams')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🎓</span>
+          <span>اختبارات الفصول</span>
+        </button>
+        <button data-nav="practicals" onclick="navigateTo('practicals')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🧪</span>
+          <span>التجارب العملية</span>
+        </button>
+        <button data-nav="notes" onclick="navigateTo('notes')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>📝</span>
+          <span>ملاحظاتي</span>
+        </button>
+        <button data-nav="progress" onclick="navigateTo('progress')" class="nav-tab flex items-center gap-1.5 px-3 py-2 rounded-2xl text-xs sm:text-sm font-bold text-slate-700 hover:bg-emerald-50 whitespace-nowrap transition">
+          <span>🏆</span>
+          <span>تقدم التلميذ</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT AREA ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 sm:py-7">
+
+    <!-- ==================== SECTION 1: HOME PAGE ==================== -->
+    <section id="section-home" class="space-y-6">
+
+      <!-- Resume Progress Banner (Shown automatically when saved progress exists) -->
+      <div id="resumeProgressBanner" class="hidden bg-gradient-to-l from-amber-50 via-emerald-50 to-sky-50 border-2 border-emerald-300 rounded-3xl p-4 sm:p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div class="flex items-start gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shrink-0 shadow">📌</div>
+            <div>
+              <div class="text-xs font-extrabold text-emerald-700">أهلاً بعودتك! تم استرجاع تقدمك المحفوظ تلقائياً:</div>
+              <h3 id="resumeLastLocationTitle" class="font-extrabold text-base sm:text-lg text-slate-900 mt-0.5">آخر صفحة وصلت إليها: صفحة ١</h3>
+              <p id="resumeStatsSummary" class="text-xs sm:text-sm text-slate-600 mt-0.5">تصفحت ١ صفحة • أكملت ٠ أنشطة • ٠ اختبارات فصول</p>
+            </div>
+          </div>
+          <div class="flex flex-wrap gap-2">
+            <button id="resumeBookBtn" onclick="openBookPage(appState.currentPage)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-5 py-2.5 rounded-2xl text-sm shadow-sm transition">
+              📖 أكمل القراءة من آخر صفحة
+            </button>
+            <button onclick="navigateTo('games')" class="bg-white hover:bg-sky-50 border border-sky-300 text-sky-900 font-bold px-4 py-2.5 rounded-2xl text-sm transition">
+              🎮 الألعاب التعليمية
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Hero Banner -->
+      <div class="relative overflow-hidden rounded-3xl bg-gradient-to-l from-emerald-600 via-teal-600 to-sky-700 text-white p-6 sm:p-10 shadow-lg">
+        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div class="lg:col-span-8 space-y-4">
+            <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-1.5 rounded-full text-xs sm:text-sm font-bold">
+              <span>🇮🇶</span>
+              <span>سلسلة كتب العلوم للمرحلة الابتدائية • الطبعة الحادية عشرة</span>
+            </div>
+            <h1 class="text-2xl sm:text-4xl font-extrabold leading-snug">
+              مرحباً بك في منصة العلوم التفاعلية للصف الثالث الابتدائي!
+            </h1>
+            <p class="text-emerald-50 text-base sm:text-lg leading-relaxed max-w-2xl">
+              تصفح كتابك المدرسي الأصلي كاملاً (١٩٦ صفحة)، وتدرّب على الأنشطة التفاعلية والألعاب العلمية الممتعة بالمؤثرات الصوتية، واختبر نفسك في الاختبارات الختامية للفصول العشرة، ودوّن ملاحظاتك الدراسية.
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="openBookPage(appState.currentPage || 1)" class="flex items-center gap-2 bg-white text-emerald-800 hover:bg-emerald-50 font-extrabold px-6 py-3.5 rounded-2xl text-base sm:text-lg shadow-md transition">
+                <span>📖</span>
+                <span>افتح الكتاب المدرسي الأصلي</span>
+              </button>
+              <button onclick="navigateTo('games')" class="flex items-center gap-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-6 py-3.5 rounded-2xl text-base sm:text-lg shadow-md transition">
+                <span>🎮</span>
+                <span>العب وتعلّم العلوم</span>
+              </button>
+              <button onclick="navigateTo('exams')" class="flex items-center gap-2 bg-white/15 hover:bg-white/25 border border-white/40 text-white font-extrabold px-5 py-3.5 rounded-2xl text-base transition">
+                <span>🎓</span>
+                <span>اختبارات الفصول</span>
+              </button>
+            </div>
+          </div>
+          <div class="lg:col-span-4 flex justify-center">
+            <div class="bg-white/15 backdrop-blur-md border border-white/30 rounded-3xl p-5 text-center w-full max-w-xs animate-float">
+              <div class="text-5xl mb-2">🌱🔭🧲</div>
+              <div class="font-display font-extrabold text-xl">٥ وحدات دراسية</div>
+              <div class="text-sm text-emerald-100 mt-1">١٠ فصول علمية • ١٩٦ صفحة أصلية</div>
+              <div class="mt-4 bg-white/20 rounded-2xl p-3 text-xs text-right space-y-1">
+                <div>✅ الكتاب الأصلي مدمج ومباشر</div>
+                <div>✅ ٤ ألعاب تعليمية بمؤثرات صوتية</div>
+                <div>✅ ١٠ اختبارات ختامية للفصول بالدرجات</div>
+                <div>✅ حفظ التقدّم ودفتر ملاحظات للطالب</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Access Cards to All Sections -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <button onclick="openBookPage(5)" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-emerald-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-2xl mb-3">📑</div>
+            <h3 class="font-bold text-base text-slate-800">فهرس الكتاب الأصلي</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">انتقل مباشرة إلى صفحة المحتويات (ص ٥) أو أي درس من دروس الكتاب الـ ١٩٦.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-emerald-700 font-bold text-xs">افتح الكتاب ←</span>
+        </button>
+
+        <button onclick="navigateTo('games')" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-purple-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl mb-3">🎮</div>
+            <h3 class="font-bold text-base text-slate-800">الألعاب التعليمية (٤ ألعاب)</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">صائد العلوم، لعبة الذاكرة، تحدي الـ ٦٠ ثانية، وبطل إعادة التدوير بالمؤثرات الصوتية.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-purple-700 font-bold text-xs">ابدأ اللعب ←</span>
+        </button>
+
+        <button onclick="navigateTo('activities')" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-sky-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-sky-100 text-sky-700 flex items-center justify-center text-2xl mb-3">🎯</div>
+            <h3 class="font-bold text-base text-slate-800">الأنشطة التفاعلية</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">تصنيف الحيوانات، السلاسل الغذائية، فصل المخاليط، والموصلات والعوازل.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-sky-700 font-bold text-xs">العب وتعلم ←</span>
+        </button>
+
+        <button onclick="navigateTo('exams')" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-amber-200 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-800 flex items-center justify-center text-2xl mb-3">🎓</div>
+            <h3 class="font-bold text-base text-slate-800">اختبارات الفصول (١٠)</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">اختبار ختامي لكل فصل من فصول الكتاب مع حساب الدرجة وإظهار الإجابات.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-amber-800 font-bold text-xs">ابدأ الاختبار ←</span>
+        </button>
+
+        <button onclick="navigateTo('practicals')" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-indigo-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-700 flex items-center justify-center text-2xl mb-3">🧪</div>
+            <h3 class="font-bold text-base text-slate-800">التجارب العملية</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">محاكاة تجارب الكتاب: البناء الضوئي، الضوء والموشور، ونفاذية التربة.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-indigo-700 font-bold text-xs">جرّب بنفسك ←</span>
+        </button>
+
+        <button onclick="navigateTo('notes')" class="card-hover text-right bg-white p-5 rounded-3xl border-2 border-teal-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <div class="w-11 h-11 rounded-2xl bg-teal-100 text-teal-700 flex items-center justify-center text-2xl mb-3">📝</div>
+            <h3 class="font-bold text-base text-slate-800">دفتر ملاحظاتي</h3>
+            <p class="text-xs sm:text-sm text-slate-600 mt-1">اكتب ملخصاتك وملاحظاتك واربطها برقم الصفحة في الكتاب المدرسي.</p>
+          </div>
+          <span class="mt-3 inline-flex items-center gap-1 text-teal-700 font-bold text-xs">اكتب ملاحظة ←</span>
+        </button>
+      </div>
+
+      <!-- The 5 Units of the Textbook -->
+      <div class="bg-white rounded-3xl border-2 border-emerald-100 p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-2 mb-5">
+          <div>
+            <h2 class="text-xl sm:text-2xl font-extrabold text-emerald-900">وحدات كتاب العلوم للصف الثالث الابتدائي</h2>
+            <p class="text-sm text-slate-600">اضغط على أي وحدة لفتحها مباشرة في الكتاب الأصلي أو الدخول لاختبارات فصولها</p>
+          </div>
+          <button onclick="openBookPage(7)" class="bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold px-4 py-2 rounded-2xl text-sm transition">
+            🦺 احتياطات السلامة (ص ٧)
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="homeUnitsGrid">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 2: ORIGINAL TEXTBOOK READER ==================== -->
+    <section id="section-reader" class="hidden space-y-4">
+      <!-- Reader Top Controls Toolbar -->
+      <div class="bg-white rounded-3xl border-2 border-emerald-200 p-3 sm:p-4 shadow-sm space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <!-- TOC Toggle & Return to TOC -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button onclick="toggleTocDrawer()" class="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2.5 rounded-2xl text-sm shadow-sm transition">
+              <span>📑</span>
+              <span>فهرس الدروس</span>
+            </button>
+            <button onclick="goToPage(5)" class="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 font-bold px-3.5 py-2.5 rounded-2xl text-sm transition">
+              <span>🏠</span>
+              <span>الفهرس (ص ٥)</span>
+            </button>
+            <button onclick="openNoteForCurrentPage()" class="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold px-3.5 py-2.5 rounded-2xl text-sm transition" title="اكتب ملاحظة مرتبطة بهذه الصفحة">
+              <span>📝</span>
+              <span>دوّن ملاحظة للصفحة</span>
+            </button>
+          </div>
+
+          <!-- Page Navigation Controls -->
+          <div class="flex flex-wrap items-center gap-2">
+            <button id="prevPageBtn" onclick="changePage(-1)" class="flex items-center gap-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-40 text-white font-bold px-4 py-2.5 rounded-2xl text-sm transition">
+              <span>▶</span>
+              <span>السابق</span>
+            </button>
+
+            <form onsubmit="handlePageInputSubmit(event)" class="flex items-center gap-1.5 bg-slate-100 px-3 py-1.5 rounded-2xl border border-slate-200">
+              <label for="pageNumberInput" class="text-xs sm:text-sm font-bold text-slate-700">صفحة:</label>
+              <input id="pageNumberInput" type="number" min="1" max="196" value="1" class="w-16 text-center font-extrabold text-base text-emerald-800 bg-white border border-slate-300 rounded-xl py-1 focus:outline-none focus:border-emerald-500" />
+              <span class="text-xs sm:text-sm font-bold text-slate-600">من ١٩٦</span>
+              <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-bold px-2.5 py-1.5 rounded-xl transition">انتقال</button>
+            </form>
+
+            <button id="nextPageBtn" onclick="changePage(1)" class="flex items-center gap-1 bg-sky-600 hover:bg-sky-700 disabled:opacity-40 text-white font-bold px-4 py-2.5 rounded-2xl text-sm transition">
+              <span>التالي</span>
+              <span>◀</span>
+            </button>
+          </div>
+
+          <!-- Zoom Controls -->
+          <div class="flex items-center gap-1.5 bg-sky-50 px-2.5 py-1.5 rounded-2xl border border-sky-200">
+            <button onclick="changeZoom(-0.15)" class="w-9 h-9 rounded-xl bg-white hover:bg-sky-100 text-sky-800 font-extrabold text-lg border border-sky-200 transition" title="تصغير الصفحة">−</button>
+            <span id="zoomLevelLabel" class="text-xs sm:text-sm font-extrabold text-sky-900 min-w-[48px] text-center">115%</span>
+            <button onclick="changeZoom(0.15)" class="w-9 h-9 rounded-xl bg-white hover:bg-sky-100 text-sky-800 font-extrabold text-lg border border-sky-200 transition" title="تكبير الصفحة">+</button>
+            <button onclick="resetZoom()" class="px-2.5 h-9 rounded-xl bg-white hover:bg-sky-100 text-sky-800 font-bold text-xs border border-sky-200 transition" title="ملاءمة العرض">ملاءمة</button>
+          </div>
+        </div>
+
+        <!-- Current Page Context Banner -->
+        <div class="flex flex-wrap items-center justify-between gap-2 bg-gradient-to-l from-emerald-50 to-sky-50 px-4 py-2.5 rounded-2xl border border-emerald-100">
+          <div class="flex items-center gap-2 text-sm">
+            <span class="font-bold text-emerald-800">الموقع الحالي في الكتاب:</span>
+            <span id="currentLessonBreadcrumb" class="font-extrabold text-sky-900">غلاف الكتاب وصفحة العنوان — (صفحة 1 من ١٩٦)</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="bookSourceStatusBadge" class="text-xs font-bold bg-white border border-slate-200 text-slate-600 px-3 py-1 rounded-xl">
+              ⏳ بانتظار ربط ملف الكتاب
+            </span>
+            <button id="exportEmbeddedBtn" onclick="exportStandaloneWithPdf()" class="hidden inline-flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs sm:text-sm shadow-xs transition" title="تصدير نسخة HTML نهائية يكون الكتاب مدمجاً بداخلها ويعمل تلقائياً بدون طلب رفع الملف">
+              <span>💾</span>
+              <span>تصدير نسخة نهائية مدمجة بالكتاب</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reader Main Workspace: Collapsible TOC + Original PDF Canvas -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+        <!-- Table of Contents Sidebar -->
+        <aside id="tocSidebar" class="lg:col-span-4 bg-white rounded-3xl border-2 border-emerald-100 p-4 shadow-sm max-h-[78vh] overflow-y-auto">
+          <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+            <h3 class="font-extrabold text-lg text-emerald-900 flex items-center gap-2">
+              <span>📋</span>
+              <span>محتويات الكتاب (ص ٥ - ٦)</span>
+            </h3>
+            <button onclick="toggleTocDrawer()" class="lg:hidden text-slate-500 hover:text-slate-800 font-bold px-2 py-1 rounded-lg">✕</button>
+          </div>
+          <div id="tocListContainer" class="space-y-2 text-sm">
+            <!-- Populated from exact textbook TOC -->
+          </div>
+        </aside>
+
+        <!-- PDF Canvas Container -->
+        <div id="pdfCanvasWrapper" class="lg:col-span-8 bg-slate-200/80 rounded-3xl border-2 border-slate-300 p-3 sm:p-5 min-h-[70vh] flex flex-col items-center justify-center relative overflow-auto"
+             ondragover="event.preventDefault(); this.classList.add('drag-over');"
+             ondragleave="this.classList.remove('drag-over');"
+             ondrop="handlePdfDrop(event)">
+
+          <!-- Setup Helper shown ONLY when PDF is not yet embedded or placed next to index.html -->
+          <div id="pdfUploadPrompt" class="bg-white rounded-3xl border-2 border-emerald-200 p-6 sm:p-7 max-w-xl text-center shadow-md space-y-4">
+            <div class="text-5xl">📘</div>
+            <h3 class="font-extrabold text-xl sm:text-2xl text-emerald-900">تثبيت الكتاب المدرسي الأصلي (١٩٦ صفحة)</h3>
+            <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
+              يعمل القارئ على فتح <strong class="text-emerald-800">«كتاب العلوم الثالث الابتدائي.pdf»</strong> تلقائياً فور وجوده مدمجاً أو في نفس مجلد المنصة دون أي تدخل من الطالب.
+            </p>
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-right text-xs sm:text-sm text-amber-950 space-y-1.5">
+              <div class="font-extrabold text-amber-900">💡 كيف تجعل الكتاب يفتح مباشرة بدون أي زر رفع؟</div>
+              <p><strong>الطريقة الأسهل (ملف واحد متكامل):</strong> اختر ملف PDF مرة واحدة الآن، ثم اضغط على زر <strong>«💾 تصدير نسخة نهائية مدمجة بالكتاب»</strong> في الأعلى؛ سينزل لك ملف HTML واحد يحتوي على المنصة + الـ ١٩٦ صفحة معاً، ويفتح الكتاب تلقائياً عند تشغيله في أي جهاز!</p>
+            </div>
+            <div class="pt-1 flex flex-wrap items-center justify-center gap-3">
+              <label class="cursor-pointer inline-flex items-center justify-center gap-2 bg-gradient-to-l from-emerald-600 to-sky-600 hover:from-emerald-700 hover:to-sky-700 text-white font-extrabold px-6 py-3.5 rounded-2xl text-sm sm:text-base shadow-md transition">
+                <span>📂</span>
+                <span>اختر ملف الكتاب (PDF) لدمجه وتشغيله</span>
+                <input type="file" accept="application/pdf" class="hidden" onchange="handlePdfFileUpload(event)" />
+              </label>
+            </div>
+            <p class="text-xs text-slate-500">
+              الصفحة المحددة حالياً: <strong>صفحة <span id="pendingPageLabel">1</span></strong> (يتم حفظ الكتاب في ذاكرة المتصفح تلقائياً بعد الاختيار الأول).
+            </p>
+          </div>
+
+          <!-- Loading Spinner -->
+          <div id="pdfLoadingSpinner" class="hidden flex flex-col items-center gap-3 py-12">
+            <div class="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+            <p class="font-bold text-emerald-900">جاري عرض الصفحة الأصلية من الكتاب...</p>
+          </div>
+
+          <!-- Actual Original PDF Page Canvas -->
+          <div id="canvasContainer" class="hidden w-full flex justify-center overflow-x-auto">
+            <canvas id="pdfRenderCanvas" class="rounded-xl shadow-xl bg-white max-w-full h-auto"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 3: INTERACTIVE LEARNING ACTIVITIES ==================== -->
+    <section id="section-activities" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-sky-100 p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-sky-900">🧩 الأنشطة التعليمية التفاعلية</h2>
+            <p class="text-slate-600 mt-1 text-sm sm:text-base">أنشطة تفاعلية مطابقة لدروس وصور الكتاب المدرسي، مع إمكانية إعادة المحاولة في أي وقت.</p>
+          </div>
+          <div class="flex flex-wrap gap-2" id="activitySelectorTabs">
+            <!-- Activity switcher pills -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Interactive Activity Workspace -->
+      <div id="activeActivityContainer" class="bg-white rounded-3xl border-2 border-emerald-100 p-5 sm:p-7 shadow-sm">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 4: EDUCATIONAL GAMES ==================== -->
+    <section id="section-games" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-purple-200 p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-purple-900">🎮 الألعاب التعليمية التفاعلية</h2>
+            <p class="text-slate-600 mt-1 text-sm sm:text-base">العب واجمع النجوم مع مؤثرات صوتية ممتعة وأسئلة مستمدة من منهج العلوم للصف الثالث الابتدائي!</p>
+          </div>
+          <div class="flex flex-wrap gap-2" id="gamesSelectorTabs">
+            <button onclick="selectGame(0)" data-game="0" class="game-tab-btn bg-purple-600 text-white font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm transition">🚀 ١. صائد العلوم</button>
+            <button onclick="selectGame(1)" data-game="1" class="game-tab-btn bg-slate-100 hover:bg-purple-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm transition">🃏 ٢. ذاكرة العلماء</button>
+            <button onclick="selectGame(2)" data-game="2" class="game-tab-btn bg-slate-100 hover:bg-purple-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm transition">⚡ ٣. تحدي الـ ٦٠ ثانية</button>
+            <button onclick="selectGame(3)" data-game="3" class="game-tab-btn bg-slate-100 hover:bg-purple-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-xs sm:text-sm transition">♻️ ٤. بطل التدوير البيئي</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Active Game Workspace -->
+      <div id="activeGameContainer" class="bg-white rounded-3xl border-2 border-emerald-100 p-5 sm:p-7 shadow-sm">
+        <!-- Rendered dynamically by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 5: INTERACTIVE LESSON QUESTIONS ==================== -->
+    <section id="section-questions" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-emerald-100 p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-900">❓ أسئلة مراجعة الدروس</h2>
+            <p class="text-slate-600 mt-1 text-sm sm:text-base">أسئلة مستخرجة نصاً من فقرات «مراجعة الدرس» و«مراجعة الفصل» مع تصحيح فوري وزر إعادة المحاولة لكل سؤال.</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-2xl text-sm font-bold text-emerald-800">
+              أجبت بشكل صحيح عن: <span id="quizScoreBadge" class="text-lg font-extrabold text-sky-700">0</span> / <span id="quizTotalBadge">0</span>
+            </div>
+            <button onclick="resetAllLessonQuestions()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold px-3.5 py-2 rounded-2xl text-xs sm:text-sm transition" title="إعادة محاولة جميع الأسئلة">
+              🔄 إعادة محاولة الكل
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter by Unit -->
+        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100" id="questionUnitFilters">
+          <button onclick="filterQuestions('all')" data-qfilter="all" class="qfilter-btn bg-emerald-600 text-white font-bold px-4 py-2 rounded-2xl text-sm transition">جميع الوحدات</button>
+          <button onclick="filterQuestions(1)" data-qfilter="1" class="qfilter-btn bg-slate-100 hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm transition">الوحدة ١: تغذية الكائنات الحية</button>
+          <button onclick="filterQuestions(2)" data-qfilter="2" class="qfilter-btn bg-slate-100 hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm transition">الوحدة ٢: موارد البيئة</button>
+          <button onclick="filterQuestions(3)" data-qfilter="3" class="qfilter-btn bg-slate-100 hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm transition">الوحدة ٣: المادة</button>
+          <button onclick="filterQuestions(4)" data-qfilter="4" class="qfilter-btn bg-slate-100 hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm transition">الوحدة ٤: الضوء والحرارة</button>
+          <button onclick="filterQuestions(5)" data-qfilter="5" class="qfilter-btn bg-slate-100 hover:bg-emerald-50 text-slate-700 font-bold px-4 py-2 rounded-2xl text-sm transition">الوحدة ٥: مكونات الأرض</button>
+        </div>
+      </div>
+
+      <!-- Questions List -->
+      <div id="questionsListContainer" class="space-y-5">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 6: CHAPTER FINAL EXAMS (10 CHAPTERS) ==================== -->
+    <section id="section-exams" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-amber-200 p-5 sm:p-6 shadow-sm space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-slate-900">🎓 الاختبارات الختامية للفصول (١٠ اختبارات شاملة)</h2>
+            <p class="text-slate-600 mt-1 text-sm sm:text-base">اختر أي فصل من فصول الكتاب العشرة، أجب عن جميع الأسئلة، ثم اضغط «إنهاء الاختبار» لعرض درجتك وإظهار الإجابات الصحيحة.</p>
+          </div>
+          <div class="bg-amber-50 border border-amber-300 px-4 py-2 rounded-2xl text-sm font-bold text-amber-900">
+            الفصول المجتازة: <span id="completedExamsCountBadge" class="text-lg font-extrabold text-emerald-700">0</span> / ١٠
+          </div>
+        </div>
+
+        <!-- 10 Chapters Grid Selector -->
+        <div id="chapterExamsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5 pt-2 border-t border-slate-100">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <!-- Active Chapter Exam Workspace -->
+      <div id="activeChapterExamContainer" class="bg-white rounded-3xl border-2 border-sky-200 p-5 sm:p-7 shadow-sm">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 7: PRACTICAL LEARNING ACTIVITIES ==================== -->
+    <section id="section-practicals" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-sky-100 p-5 sm:p-6 shadow-sm">
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-sky-900">🧪 الأنشطة العملية والتجارب الاستكشافية</h2>
+        <p class="text-slate-600 mt-1 text-sm sm:text-base">
+          مستمدة من فقرات <strong>«أستكشف»</strong> و<strong>«أعمل كالعلماء»</strong> في الكتاب المدرسي مع محاكاة تفاعلية وزر إعادة التجربة.
+        </p>
+
+        <!-- Experiment Selector -->
+        <div class="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-100">
+          <button onclick="selectExperiment(0)" data-exp="0" class="exp-tab-btn bg-sky-600 text-white font-bold px-4 py-2.5 rounded-2xl text-sm sm:text-base transition">🌱 ١. أهمية ضوء الشمس والهواء للنبات (ص ٣١ و ٣٣)</button>
+          <button onclick="selectExperiment(1)" data-exp="1" class="exp-tab-btn bg-slate-100 hover:bg-sky-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-sm sm:text-base transition">🔦 ٢. انتقال وانعكاس وانكسار الضوء (ص ١٢٩ - ١٤٤)</button>
+          <button onclick="selectExperiment(2)" data-exp="2" class="exp-tab-btn bg-slate-100 hover:bg-sky-50 text-slate-700 font-bold px-4 py-2.5 rounded-2xl text-sm sm:text-base transition">⏳ ٣. نفاذية التربة للماء - أعمل كالعلماء (ص ١٧٩)</button>
+        </div>
+      </div>
+
+      <!-- Active Experiment Workspace -->
+      <div id="activeExperimentContainer">
+        <!-- Populated dynamically -->
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 8: STUDENT NOTES SECTION ==================== -->
+    <section id="section-notes" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-teal-200 p-5 sm:p-6 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-teal-900">📝 دفتر ملاحظات التلميذ</h2>
+            <p class="text-slate-600 mt-1 text-sm sm:text-base">اكتب ملاحظاتك العلمية، والتعاريف المهمة، أو الأسئلة التي تود طرحها على معلمك، وسيتم حفظها تلقائياً.</p>
+          </div>
+          <button onclick="window.print()" class="no-print bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2.5 rounded-2xl text-sm transition">
+            🖨️ طباعة دفتر الملاحظات
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        <!-- Note Editor Form -->
+        <div class="lg:col-span-5 bg-white rounded-3xl border-2 border-emerald-200 p-5 sm:p-6 shadow-sm space-y-4 no-print">
+          <h3 id="noteFormHeading" class="font-extrabold text-lg text-emerald-900 flex items-center gap-2">
+            <span>✍️</span>
+            <span>إضافة ملاحظة جديدة</span>
+          </h3>
+          <input type="hidden" id="editingNoteId" value="" />
+
+          <div>
+            <label for="noteTitleInput" class="block text-sm font-bold text-slate-700 mb-1">عنوان الملاحظة:</label>
+            <input id="noteTitleInput" type="text" placeholder="مثال: تعريف عملية البناء الضوئي" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-2.5 text-sm sm:text-base font-bold focus:outline-none focus:border-emerald-500" />
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label for="noteUnitSelect" class="block text-sm font-bold text-slate-700 mb-1">الوحدة الدراسية:</label>
+              <select id="noteUnitSelect" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-3 py-2.5 text-sm font-bold focus:outline-none focus:border-emerald-500">
+                <option value="عام">ملاحظة عامة</option>
+                <option value="الوحدة الأولى: تغذية الكائنات الحية">الوحدة ١: تغذية الكائنات الحية</option>
+                <option value="الوحدة الثانية: موارد البيئة">الوحدة ٢: موارد البيئة</option>
+                <option value="الوحدة الثالثة: المادة">الوحدة ٣: المادة</option>
+                <option value="الوحدة الرابعة: الضوء والحرارة">الوحدة ٤: الضوء والحرارة</option>
+                <option value="الوحدة الخامسة: مكونات الأرض">الوحدة ٥: مكونات الأرض</option>
+              </select>
+            </div>
+            <div>
+              <label for="notePageInput" class="block text-sm font-bold text-slate-700 mb-1">رقم الصفحة في الكتاب:</label>
+              <input id="notePageInput" type="number" min="1" max="196" placeholder="مثال: 34" class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl px-4 py-2.5 text-sm font-bold focus:outline-none focus:border-emerald-500" />
+            </div>
+          </div>
+
+          <div>
+            <label for="noteBodyInput" class="block text-sm font-bold text-slate-700 mb-1">نص الملاحظة:</label>
+            <textarea id="noteBodyInput" rows="5" placeholder="اكتب ملاحظاتك أو ملخص الدرس هنا..." class="w-full bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 text-sm sm:text-base leading-relaxed focus:outline-none focus:border-emerald-500"></textarea>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-1">
+            <button onclick="saveStudentNote()" class="flex-1 bg-gradient-to-l from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3 px-5 rounded-2xl text-sm sm:text-base shadow-sm transition">
+              💾 حفظ الملاحظة
+            </button>
+            <button id="cancelEditNoteBtn" onclick="resetNoteForm()" class="hidden bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold py-3 px-4 rounded-2xl text-sm transition">
+              إلغاء التعديل
+            </button>
+          </div>
+        </div>
+
+        <!-- Saved Notes List -->
+        <div class="lg:col-span-7 space-y-4">
+          <div class="bg-white rounded-3xl border border-slate-200 p-4 flex flex-wrap items-center justify-between gap-2 no-print">
+            <span class="font-extrabold text-slate-800 text-sm sm:text-base">📚 ملاحظاتي المحفوظة (<span id="notesCountLabel">0</span>)</span>
+            <select id="notesFilterSelect" onchange="renderStudentNotes()" class="bg-slate-50 border border-slate-300 rounded-xl px-3 py-1.5 text-xs sm:text-sm font-bold text-slate-700">
+              <option value="all">عرض جميع الملاحظات</option>
+              <option value="عام">ملاحظات عامة</option>
+              <option value="الوحدة الأولى: تغذية الكائنات الحية">الوحدة ١: تغذية الكائنات الحية</option>
+              <option value="الوحدة الثانية: موارد البيئة">الوحدة ٢: موارد البيئة</option>
+              <option value="الوحدة الثالثة: المادة">الوحدة ٣: المادة</option>
+              <option value="الوحدة الرابعة: الضوء والحرارة">الوحدة ٤: الضوء والحرارة</option>
+              <option value="الوحدة الخامسة: مكونات الأرض">الوحدة ٥: مكونات الأرض</option>
+            </select>
+          </div>
+
+          <div id="studentNotesList" class="space-y-3">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SECTION 9: STUDENT PROGRESS ==================== -->
+    <section id="section-progress" class="hidden space-y-6">
+      <div class="bg-white rounded-3xl border-2 border-emerald-100 p-5 sm:p-7 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-slate-100">
+          <div>
+            <h2 class="text-2xl sm:text-3xl font-extrabold text-emerald-900">🏆 سجل إنجاز وتقدم التلميذ</h2>
+            <p class="text-slate-600 text-sm sm:text-base mt-1">يتم حفظ جميع إنجازاتك ودرجاتك وآخر صفحة وصلت إليها تلقائياً في متصفحك.</p>
+          </div>
+          <div class="flex flex-wrap gap-2 no-print">
+            <button onclick="window.print()" class="bg-sky-600 hover:bg-sky-700 text-white font-bold px-4 py-2.5 rounded-2xl text-sm transition">🖨️ طباعة شهادة الإنجاز</button>
+            <button onclick="confirmResetProgress()" class="bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-4 py-2.5 rounded-2xl text-sm transition">🔄 إعادة ضبط التقدم</button>
+          </div>
+        </div>
+
+        <!-- Summary Metrics -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
+          <div class="bg-amber-50 border-2 border-amber-200 rounded-3xl p-4 text-center">
+            <div class="text-3xl mb-1">⭐</div>
+            <div id="progStars" class="text-2xl sm:text-3xl font-extrabold text-amber-800">0</div>
+            <div class="text-xs sm:text-sm font-bold text-amber-900 mt-1">مجموع النجوم المكتسبة</div>
+          </div>
+          <div class="bg-emerald-50 border-2 border-emerald-200 rounded-3xl p-4 text-center">
+            <div class="text-3xl mb-1">📖</div>
+            <div id="progPagesCount" class="text-2xl sm:text-3xl font-extrabold text-emerald-800">1 / 196</div>
+            <div class="text-xs sm:text-sm font-bold text-emerald-900 mt-1">صفحات الكتاب المتصفحة</div>
+          </div>
+          <div class="bg-sky-50 border-2 border-sky-200 rounded-3xl p-4 text-center">
+            <div class="text-3xl mb-1">🧩</div>
+            <div id="progActivitiesCount" class="text-2xl sm:text-3xl font-extrabold text-sky-800">0 / 6</div>
+            <div class="text-xs sm:text-sm font-bold text-sky-900 mt-1">الأنشطة التفاعلية</div>
+          </div>
+          <div class="bg-teal-50 border-2 border-teal-200 rounded-3xl p-4 text-center">
+            <div class="text-3xl mb-1">✅</div>
+            <div id="progQuestionsCount" class="text-2xl sm:text-3xl font-extrabold text-teal-800">0 / 15</div>
+            <div class="text-xs sm:text-sm font-bold text-teal-900 mt-1">أسئلة الدروس المحلولة</div>
+          </div>
+          <div class="bg-indigo-50 border-2 border-indigo-200 rounded-3xl p-4 text-center">
+            <div class="text-3xl mb-1">🎓</div>
+            <div id="progExamsCount" class="text-2xl sm:text-3xl font-extrabold text-indigo-800">0 / 10</div>
+            <div class="text-xs sm:text-sm font-bold text-indigo-900 mt-1">اختبارات الفصول</div>
+          </div>
+        </div>
+
+        <!-- Chapter Exams Scores Summary Table -->
+        <div class="mt-7">
+          <h3 class="font-extrabold text-xl text-slate-800 mb-3">📊 سجل درجات الاختبارات الختامية للفصول العشرة</h3>
+          <div class="overflow-x-auto rounded-2xl border border-slate-200">
+            <table class="w-full text-right text-sm">
+              <thead class="bg-emerald-50 text-emerald-950 font-extrabold border-b border-emerald-200">
+                <tr>
+                  <th class="py-3 px-4">الفصل الدراسي</th>
+                  <th class="py-3 px-4">صفحة المراجعة</th>
+                  <th class="py-3 px-4">أعلى درجة</th>
+                  <th class="py-3 px-4">الحالة</th>
+                  <th class="py-3 px-4 no-print">إجراء</th>
+                </tr>
+              </thead>
+              <tbody id="progressExamsTableBody" class="divide-y divide-slate-100">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Badges Grid -->
+        <div class="mt-7">
+          <h3 class="font-extrabold text-xl text-slate-800 mb-4">🎖️ أوسمة العالم الصغير</h3>
+          <div id="badgesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== CUSTOM MESSAGE / CONFIRMATION MODAL ==================== -->
+  <div id="customModalBackdrop" class="hidden fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border-2 border-emerald-200 max-w-md w-full p-6 shadow-2xl text-center space-y-4">
+      <div id="customModalIcon" class="text-5xl">🌟</div>
+      <h3 id="customModalTitle" class="font-extrabold text-xl text-slate-900">عنوان الرسالة</h3>
+      <p id="customModalBody" class="text-slate-600 text-base leading-relaxed">نص الرسالة هنا</p>
+      <div id="customModalActions" class="flex items-center justify-center gap-3 pt-2">
+        <button onclick="closeCustomModal()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-2xl transition">حسناً</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="bg-white border-t border-emerald-100 py-4 px-4 text-center text-xs sm:text-sm text-slate-600 no-print">
+    <p class="font-bold text-emerald-800">منصة العلوم التفاعلية • الصف الثالث الابتدائي • جمهورية العراق</p>
+    <p class="mt-1">مطابقة تماماً لكتاب العلوم المدرسي الأصلي (١٩٦ صفحة) مع الألعاب التفاعلية والمؤثرات الصوتية واختبارات الفصول العشرة.</p>
+  </footer>
+
+  <!-- حاوية تخزين الكتاب المدمج داخل الملف عند التصدير النهائي -->
+  <script id="embedded-book-data" type="text/plain"></script>
+
+  <!-- ==================== APPLICATION LOGIC ==================== -->
+
+  <script src="js/app.js"></script>
+</body>
+</html>
